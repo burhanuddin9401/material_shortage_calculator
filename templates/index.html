@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shortage Management Application</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>📦 Shortage Management System</h1>
+            <p class="subtitle">Calculate component shortages for electronics manufacturing</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Input Section -->
+            <section class="card input-section">
+                <h2>Configuration</h2>
+                
+                <!-- Project Selection -->
+                <div class="form-group">
+                    <label for="projectSelect">Select Project</label>
+                    <select id="projectSelect" class="form-control">
+                        <option value="">-- Choose a project --</option>
+                    </select>
+                    <small>Loads predefined BOM for the selected project</small>
+                </div>
+
+                <!-- File Upload -->
+                <div class="form-group">
+                    <label for="fileInput">Upload Inventory Excel File</label>
+                    <div class="file-upload">
+                        <input type="file" id="fileInput" class="file-input" accept=".xlsx,.xls" />
+                        <label for="fileInput" class="file-label">
+                            <span class="upload-icon">📄</span>
+                            <span id="fileName">Choose Excel file (.xlsx)</span>
+                        </label>
+                    </div>
+                    <small>File must contain MPN and Qty columns</small>
+                </div>
+
+                <!-- Build Quantity -->
+                <div class="form-group">
+                    <label for="buildQty">Build Quantity (units)</label>
+                    <input 
+                        type="number" 
+                        id="buildQty" 
+                        class="form-control" 
+                        min="1" 
+                        value="50"
+                        placeholder="Enter number of units to build"
+                    />
+                </div>
+
+                <!-- Wastage Percentage -->
+                <div class="form-group">
+                    <label for="wastagePercent">Wastage Percentage (%)</label>
+                    <input 
+                        type="number" 
+                        id="wastagePercent" 
+                        class="form-control" 
+                        min="0" 
+                        max="100" 
+                        step="0.1"
+                        value="10"
+                        placeholder="Enter wastage percentage"
+                    />
+                    <small>Percentage of extra components to account for waste</small>
+                </div>
+
+                <!-- Calculate Button -->
+                <button id="calculateBtn" class="btn btn-primary btn-large">
+                    Calculate Shortages
+                </button>
+            </section>
+
+            <!-- Status Message -->
+            <div id="statusMessage" class="status-message" style="display: none;"></div>
+
+            <!-- Results Section -->
+            <section id="resultsSection" class="card results-section" style="display: none;">
+                <h2>Shortage Analysis Results</h2>
+                
+                <!-- Summary -->
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <span class="summary-label">Total Components</span>
+                        <span id="summaryTotal" class="summary-value">0</span>
+                    </div>
+                    <div class="summary-item warning">
+                        <span class="summary-label">Components Short</span>
+                        <span id="summaryShort" class="summary-value">0</span>
+                    </div>
+                    <div class="summary-item danger">
+                        <span class="summary-label">Total Shortage Units</span>
+                        <span id="summaryTotalShortage" class="summary-value">0</span>
+                    </div>
+                    <div class="summary-item info">
+                        <span class="summary-label">Build Qty / Wastage</span>
+                        <span id="summaryConfig" class="summary-value">-</span>
+                    </div>
+                </div>
+
+                <!-- Results Table -->
+                <div class="table-wrapper">
+                    <table class="results-table">
+                        <thead>
+                            <tr>
+                                <th>MPN</th>
+                                <th>Description</th>
+                                <th class="text-center">Qty/Unit</th>
+                                <th class="text-center">Available</th>
+                                <th class="text-center">Required</th>
+                                <th class="text-center">With Wastage</th>
+                                <th class="text-center">Shortage</th>
+                                <th>Alternates</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsTableBody">
+                            <!-- Results will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Export Button -->
+                <div class="action-buttons">
+                    <button id="exportBtn" class="btn btn-success">
+                        📥 Export to Excel
+                    </button>
+                </div>
+            </section>
+
+            <!-- Info Section -->
+            <section class="card info-section">
+                <h2>How to Use</h2>
+                <ol>
+                    <li><strong>Select Project:</strong> Choose from BMS, Battery TCU, or Vehicle TCU</li>
+                    <li><strong>Upload Inventory:</strong> Provide Excel file with MPN and Qty columns</li>
+                    <li><strong>Set Parameters:</strong> Enter build quantity and wastage percentage</li>
+                    <li><strong>Calculate:</strong> Click to compute shortages immediately</li>
+                    <li><strong>Export:</strong> Download results as Excel file for documentation</li>
+                </ol>
+                <p class="note">💡 <strong>Note:</strong> The system automatically handles alternate MPNs by aggregating quantities from all matching part numbers.</p>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2024 Shortage Management Application | Professional Manufacturing Solution</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
